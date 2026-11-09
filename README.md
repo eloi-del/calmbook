@@ -1,96 +1,102 @@
-# Facebook calme
+# calmbook
 
-Facebook mobile (`m.facebook.com`) dans une appli Android, sans pubs, contenu IA, Reels, vidéos ni suggestions. C'est le même principe que l'appli Instagram calme, dans le dépôt [calmgram](https://github.com/eloi-del/calmgram).
+Facebook, without the noise. It's a lightweight Android app that opens the Facebook mobile website and cleans up the feed:
 
-## Ce que fait l'appli
+- Hides ads, AI-labeled posts, Reels, videos, and posts from pages and groups you don't follow
+- An open Reel stays on its own, with no swiping to the next one
+- Adds a seek bar to videos that don't have one
+- Links open in your browser without Facebook's tracking
+- The Messages tab opens your Messenger app
+- Each filter has its own switch under "Calm mode" in the Facebook menu
 
-Chaque filtre a son interrupteur dans Mode calme. Tous sont activés par défaut. Un post masqué fait 0px de haut, et le séparateur gris qui le suit aussi, pour éviter les bandes grises.
+It doesn't patch or modify the official app. It shows the regular website (`m.facebook.com`) with display rules on top. The app never reads or stores your login, and sends no data anywhere. It's the same idea as [calmgram](https://github.com/eloi-del/calmgram), for Instagram.
 
-| Interrupteur | Comportement |
+![The Calm mode panel](docs/calm-mode.jpg)
+
+## What it does
+
+Each filter has its own switch in Calm mode. All of them are on by default. A hidden post is collapsed to 0px, along with the grey separator after it, so no grey bands are left behind.
+
+| Switch | Behavior |
 |---|---|
-| Publicités | Les posts « Sponsorisé » ou « Ad » sont masqués, dans le fil et entre les vidéos du lecteur de Reels. |
-| Contenu IA | Les posts marqués « Contenu IA » ou « AI content » sont masqués, dans le fil et dans le lecteur de Reels. |
-| Reels | Le bloc Reels du fil est masqué, et l'icône de l'onglet Reels aussi (sa place reste blanche). `/reels/` renvoie vers le fil. Un Reel seul (`/reel/ID`) reste ouvrable. |
-| Vidéos | Les posts qui contiennent une vidéo sont masqués. |
-| Suggestions | Les blocs « Suggestions pour vous » sont masqués, comme les posts des pages et groupes que tu ne suis pas (ceux qui ont un bouton « Suivre » ou « Rejoindre »). |
-| Un seul Reel à la fois | Dans un Reel ou une vidéo ouverts en plein écran, le swipe vers le suivant est bloqué. Le lecteur est reconnu à son contenu, pas à son adresse, car il s'ouvre aussi en `/<page>/videos/<numéro>/`. Pour voir des Reels dans le fil sans pouvoir enchaîner, coupe « Reels » et garde celui-ci. |
-| Messages | L'onglet Messages ouvre l'appli Messenger, au lieu de la page « Get Messenger ». |
+| Ads | Posts labeled "Sponsored" or "Ad" are hidden, in the feed and between videos in the Reels player. |
+| AI content | Posts labeled "AI content" are hidden, in the feed and in the Reels player. |
+| Reels | The Reels block in the feed is hidden, and so is the Reels tab icon (its spot stays blank). `/reels/` goes back to the feed. A single Reel (`/reel/ID`) still opens. |
+| Videos | Posts that contain a video are hidden. |
+| Suggestions | "Suggested for you" blocks are hidden, along with posts from pages and groups you don't follow (the ones with a "Follow" or "Join" button). |
+| One Reel at a time | In a Reel or video opened full screen, swiping to the next one is blocked. The player is recognized by its content, not its address, because it also opens at `/<page>/videos/<id>/`. To see Reels in the feed without being able to binge them, turn "Reels" off and keep this one on. |
+| Messages | The Messages tab opens the Messenger app instead of the "Get Messenger" page. |
 
-Ces comportements sont toujours actifs, sans interrupteur :
+These are always on, with no switch:
 
-- La barre « Ouvrir l'application » en bas de l'écran est masquée.
-- Les vidéos ont une barre de progression qu'on peut glisser pour avancer ou reculer. Elle est en bas de la vidéo, à gauche du bouton son. Le lecteur de Facebook mobile n'en a pas.
-- Les liens externes s'ouvrent dans ton navigateur. L'appli enlève le passage par `l.facebook.com` et les paramètres de pistage (`fbclid`, `utm_*`, `gclid`, `mc_eid`…).
-- Le scroll ne recule pas : l'ancrage de scroll est coupé sur le fil, comme pour Instagram.
-- Le script ne cherche la barre « Ouvrir l'application » qu'une fois par seconde au plus. Chaque recherche coûte environ 35 ms, et la faire à chaque changement de la page rendait le scroll saccadé.
-- Quand beaucoup de posts sont masqués, le fil met plus de temps à se remplir. Sur un vrai compte, environ 9 posts sur 10 étaient des pubs, des vidéos, des Reels ou des suggestions : Facebook doit en charger beaucoup pour en montrer quelques-uns.
-- La recherche, les notifications, les groupes et Marketplace ne changent pas.
+- The "Open app" bar at the bottom of the screen is hidden.
+- Videos get a seek bar you can drag to move forward or back. It sits at the bottom of the video, left of the sound button. Facebook's mobile player doesn't have one. When Facebook shows its own bar, this one steps aside.
+- External links open in your browser. The app skips the `l.facebook.com` redirect and strips tracking parameters (`fbclid`, `utm_*`, `gclid`, `mc_eid`…).
+- The page doesn't jump back while scrolling: scroll anchoring is turned off on the feed.
+- Search, notifications, groups and Marketplace are unchanged.
 
+**Why the feed can feel slow to fill:** when most posts are hidden, Facebook has to load a lot to show a few. On a real account, about 9 posts out of 10 were ads, videos, Reels or suggestions. The script itself takes less than 1% of the work while scrolling. It only looks for the "Open app" bar once per second at most, because that search costs about 35 ms.
 
-![Le panneau Mode calme, ici en anglais](docs/calm-mode.jpg)
+## Settings
 
-Le panneau Mode calme s'affiche en anglais quand la page est en anglais, et en français sinon.
+- **In Facebook:** Menu (☰, top right). The **Calm mode** button is at the bottom right. It floats above the page rather than sitting in the list, because Facebook keeps redrawing its lists and a row added to them doesn't stay.
+- **Shortcut:** long-press the app icon → **Calm mode**.
+- The panel is in English when Facebook is in English, and in French otherwise.
+- Settings are saved in the site's storage on the phone. If they're cleared, everything goes back to calm mode.
+- On the phone, the app is named "Facebook" (package `fr.perso.calmbook`, with its own icon: three white lines on a blue-grey background).
 
-## Réglages
+## What's inside
 
-- **Dans Facebook :** Menu (☰ en haut à droite). Le bouton **Mode calme** est en bas à droite. C'est un bouton posé par-dessus la page, et non une ligne de la liste : Facebook redessine sans arrêt ses listes, donc une ligne ajoutée dedans ne tenait pas.
-- **Raccourci :** appui long sur l'icône → **Mode calme**.
-- L'appli s'appelle « Facebook » sur le téléphone. Son paquet est `fr.perso.calmbook`, et son icône est à elle (trois lignes blanches sur fond bleu-gris).
-- Les réglages sont gardés dans le stockage du site, sur le téléphone. S'ils sont effacés, tout revient en mode calme.
+- `app/src/main/assets/calmbook.js`: all the page rules. This is the file to fix when Facebook changes.
+- `app/src/main/java/fr/perso/calmbook/MainActivity.kt`: the WebView.
+- `app/src/main/java/fr/perso/calmbook/LinkCleaner.kt`: link cleaning.
 
-## Ce qu'il y a dedans
+**How it differs from Instagram:**
 
-- `app/src/main/assets/calmbook.js` contient toutes les règles de la page. C'est le fichier à corriger quand Facebook change.
-- `app/src/main/java/fr/perso/calmbook/MainActivity.kt` gère la WebView.
-- `app/src/main/java/fr/perso/calmbook/LinkCleaner.kt` nettoie les liens.
+- Feed posts aren't `<article>` elements. They're `[data-tracking-duration-id]` blocks.
+- Facebook empties blocks that are far off screen. Each post is classified as soon as it fills in, and its mark stays on the block.
 
-**Ce qui ne marche pas pareil qu'Instagram :**
+**Your login:** the login page is Facebook's own. There is no bridge between the page and the app (`addJavascriptInterface` isn't used), so the app can't read what you type. `calmbook.js` only reads the page address, the header of feed posts and its own settings. The app only looks at the addresses the page wants to open. The one special address is `calmbook://messenger`, which opens Messenger.
 
-- Les posts du fil ne sont pas des `<article>`. Ce sont des blocs `[data-tracking-duration-id]`.
-- Facebook vide les blocs loin de l'écran. Un post est donc classé dès qu'il se remplit, et sa marque reste sur le bloc.
+**Privacy:**
 
-**Ton identifiant :** la page de connexion est celle de Facebook. Il n'existe aucun pont entre la page et l'appli (`addJavascriptInterface` n'est pas utilisé), donc l'appli ne peut pas lire ce que tu tapes. `calmbook.js` lit seulement l'adresse de la page, l'en-tête des posts du fil et ses propres réglages. L'appli ne regarde que les adresses que la page veut ouvrir. La seule adresse spéciale est `calmbook://messenger`, qui ouvre Messenger.
+- The only permission is Internet: no microphone, camera, location or contacts.
+- Third-party cookies are refused inside the page.
+- Your Facebook session stays inside the app. Your browser doesn't have it, so Facebook "pixels" on other websites can't link your visits to your account, unless you also log in to Facebook in your browser.
+- Facebook's own internal analytics (time spent on a post, etc.) are **not** blocked. A client that never sends them would be easy to spot.
 
-**Vie privée :**
+## Build and install
 
-- La seule permission est Internet : ni micro, ni caméra, ni position, ni contacts.
-- Les cookies d'autres sites sont refusés dans la page.
-- Ta session Facebook reste dans l'appli. Ton navigateur ne l'a pas, donc les « pixels » Facebook des autres sites ne peuvent pas relier tes visites à ton compte, sauf si tu te connectes à Facebook dans le navigateur.
-- Les envois de statistiques internes de Facebook (temps passé sur un post, etc.) ne sont **pas** bloqués. Un client qui ne les envoie pas serait facile à repérer.
-
-## Compiler et installer
-
-Les prérequis sont les mêmes que pour l'appli Instagram : Java 17, le SDK Android et `local.properties`. Avec le téléphone branché et le débogage USB autorisé, lance :
+Same requirements as calmgram: Java 17, the Android SDK and `local.properties` (see the [calmgram README](https://github.com/eloi-del/calmgram#install-the-tools-once)). With the phone plugged in and USB debugging allowed:
 
 ```bash
 ./install.sh
 ```
 
-Après une compilation, Gradle reste en mémoire en arrière-plan. Sur un ordinateur qui a peu de RAM, arrête-le :
+To open the Calm mode panel directly:
+
+```bash
+./install.sh settings
+```
+
+After a build, Gradle stays in memory in the background. On a computer with little RAM, stop it:
 
 ```bash
 ./gradlew --stop
 ```
 
-Pour ouvrir directement Mode calme, lance :
+## Credits
 
-```bash
-./install.sh reglages
-```
+No code was copied. These projects served as inspiration:
 
+- [Nora](https://github.com/nonbili/Nora): spotting ads by the label under the author's name, and hiding the "Open app" bar.
+- [FB-Mobile-Clean-my-feeds](https://github.com/webdevsk/FB-Mobile-Clean-my-feeds): the list of filters (suggestions, ads, Reels), and the warning about scroll jumps on mobile Facebook.
+- [calmgram](https://github.com/eloi-del/calmgram), the Instagram app built the same way, is the base for this one.
 
-## Crédits
+## Disclaimer
 
-Aucun code n'a été copié. Ces projets ont servi d'inspiration :
+Personal project, not affiliated with Meta, which has neither approved nor reviewed it. Instagram and Facebook are trademarks of Meta. The app shows the official website and only adds display rules on top. It doesn't modify the official app, doesn't read your login and doesn't send anything anywhere. Use it at your own risk and in line with Meta's terms of use.
 
-- [Nora](https://github.com/nonbili/Nora) : repérer les pubs par l'étiquette placée sous le nom de l'auteur, et masquer la barre « Ouvrir l'application ».
-- [FB-Mobile-Clean-my-feeds](https://github.com/webdevsk/FB-Mobile-Clean-my-feeds) : la liste des filtres (suggestions, pubs, Reels), et l'avertissement sur les sauts de scroll de Facebook mobile.
-- [calmgram](https://github.com/eloi-del/calmgram), l'appli Instagram du même principe, sert de base à celle-ci.
+## License
 
-## Avertissement
-
-Projet personnel, sans lien avec Meta, qui n'a ni approuvé ni vérifié ce projet. Instagram et Facebook sont des marques de Meta. L'appli affiche le site web officiel et y ajoute seulement des règles d'affichage. Elle ne modifie pas l'appli officielle, ne lit pas ton identifiant et n'envoie rien ailleurs. Utilise-la à tes risques, dans le respect des conditions d'utilisation de Meta.
-
-## Licence
-
-MIT : voir [LICENSE](LICENSE).
+MIT: see [LICENSE](LICENSE).
