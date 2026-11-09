@@ -22,13 +22,20 @@
   // ---------------------------------------------------------------------------
   var SETTINGS_KEY = 'calmbook.settings';
   var OPTIONS = [
-    ['ads', 'Publicités', 'Masquer les posts « Sponsorisé »'],
-    ['ai', 'Contenu IA', 'Masquer les posts marqués « Contenu IA »'],
-    ['reels', 'Reels', 'Masquer les Reels du fil et l\'onglet Reels'],
-    ['videos', 'Vidéos', 'Masquer les posts avec une vidéo'],
-    ['suggested', 'Suggestions', 'Masquer les suggestions, et les posts de pages et groupes que tu ne suis pas'],
-    ['reelSwipe', 'Un seul Reel à la fois', 'Un Reel ouvert reste seul : pas de swipe vers le suivant'],
-    ['messenger', 'Messages', 'L\'onglet Messages ouvre l\'appli Messenger']
+    ['ads', 'Publicités', 'Masquer les posts « Sponsorisé »',
+     'Ads', 'Hide “Sponsored” posts'],
+    ['ai', 'Contenu IA', 'Masquer les posts marqués « Contenu IA »',
+     'AI content', 'Hide posts labeled “AI content”'],
+    ['reels', 'Reels', 'Masquer les Reels du fil et l\'onglet Reels',
+     'Reels', 'Hide Reels in the feed and the Reels tab'],
+    ['videos', 'Vidéos', 'Masquer les posts avec une vidéo',
+     'Videos', 'Hide posts with a video'],
+    ['suggested', 'Suggestions', 'Masquer les suggestions, et les posts de pages et groupes que tu ne suis pas',
+     'Suggestions', 'Hide suggestions, and posts from pages and groups you don\'t follow'],
+    ['reelSwipe', 'Un seul Reel à la fois', 'Un Reel ouvert reste seul : pas de swipe vers le suivant',
+     'One Reel at a time', 'An open Reel stays alone: no swipe to the next one'],
+    ['messenger', 'Messages', 'L\'onglet Messages ouvre l\'appli Messenger',
+     'Messages', 'The Messages tab opens the Messenger app']
   ];
 
   // Deux copies des réglages, comme dans l'appli Instagram :
@@ -38,6 +45,13 @@
   var DB_NAME = 'calmbook';
   var DB_STORE = 'kv';
   var settings = loadSettings();
+
+  // Langue de l'interface : français si la page est en français, anglais sinon
+  // (Facebook et Instagram indiquent la langue dans <html lang>).
+  function tr(fr, en) {
+    var lang = (root.getAttribute('lang') || navigator.language || '').toLowerCase();
+    return lang.indexOf('fr') === 0 ? fr : en;
+  }
 
   function normalize(saved) {
     var result = {};
@@ -324,7 +338,7 @@
     input.min = '0';
     input.max = '1000';
     input.value = '0';
-    input.setAttribute('aria-label', 'Position dans la vidéo');
+    input.setAttribute('aria-label', tr('Position dans la vidéo', 'Position in the video'));
     bar.appendChild(input);
 
     var dragging = false;
@@ -382,11 +396,11 @@
     if (!calmButton) {
       calmButton = document.createElement('button');
       calmButton.id = BUTTON_ID;
-      calmButton.setAttribute('aria-label', 'Mode calme');
+      calmButton.setAttribute('aria-label', tr('Mode calme', 'Calm mode'));
       calmButton.style.cssText = 'all:initial;position:fixed;z-index:2147483646;bottom:20px;right:16px;height:44px;' +
         'padding:0 18px;border-radius:22px;box-shadow:0 2px 8px rgba(0,0,0,.25);display:flex;align-items:center;gap:6px;background:#4A6A8A;color:#fff;' +
         'font:600 15px system-ui,Roboto,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;';
-      calmButton.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24">' + ICON + '</svg>Mode calme';
+      calmButton.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24">' + ICON + '</svg>' + tr('Mode calme', 'Calm mode');
       calmButton.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -452,17 +466,19 @@
       '.row[aria-checked="true"] .sw::after{transform:translateX(18px)}' +
       '.note{padding:16px;color:' + c.sub + ';font-size:12px}' +
       '</style>' +
-      '<div class="page" role="dialog" aria-label="Mode calme">' +
-        '<div class="head"><button class="back" aria-label="Retour">' +
+      '<div class="page" role="dialog" aria-label="' + tr('Mode calme', 'Calm mode') + '">' +
+        '<div class="head"><button class="back" aria-label="' + tr('Retour', 'Back') + '">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg>' +
-        '</button>Mode calme</div>' +
-        '<div class="sec">Dans le fil et la barre du haut</div>' +
+        '</button>' + tr('Mode calme', 'Calm mode') + '</div>' +
+        '<div class="sec">' + tr('Dans le fil et la barre du haut', 'In the feed and the top bar') + '</div>' +
         OPTIONS.map(function (o) {
           return '<button class="row" role="switch" data-key="' + o[0] + '" aria-checked="' + settings[o[0]] + '">' +
-                 '<span class="t"><b>' + o[1] + '</b><span>' + o[2] + '</span></span><span class="sw"></span></button>';
+                 '<span class="t"><b>' + tr(o[1], o[3]) + '</b><span>' + tr(o[2], o[4]) + '</span></span><span class="sw"></span></button>';
         }).join('') +
-        '<div class="note">Les liens ouverts dans le navigateur sont toujours nettoyés de leur pistage. ' +
-          'Réglages enregistrés sur cet appareil. S\'ils sont effacés, tout revient en mode calme.</div>' +
+        '<div class="note">' + tr('Les liens ouverts dans le navigateur sont toujours nettoyés de leur pistage. ' +
+          'Réglages enregistrés sur cet appareil. S\'ils sont effacés, tout revient en mode calme.',
+          'Links opened in the browser are always stripped of tracking. ' +
+          'Settings are saved on this device. If they are cleared, everything goes back to calm mode.') + '</div>' +
       '</div>';
 
     shadow.querySelector('.back').addEventListener('click', function () {

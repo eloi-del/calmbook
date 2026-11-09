@@ -26,6 +26,11 @@ Ces comportements sont toujours actifs, sans interrupteur :
 - Quand beaucoup de posts sont masqués, le fil met plus de temps à se remplir. Sur un vrai compte, environ 9 posts sur 10 étaient des pubs, des vidéos, des Reels ou des suggestions : Facebook doit en charger beaucoup pour en montrer quelques-uns.
 - La recherche, les notifications, les groupes et Marketplace ne changent pas.
 
+
+![Le panneau Mode calme, ici en anglais](docs/calm-mode.jpg)
+
+Le panneau Mode calme s'affiche en anglais quand la page est en anglais, et en français sinon.
+
 ## Réglages
 
 - **Dans Facebook :** Menu (☰ en haut à droite). Le bouton **Mode calme** est en bas à droite. C'est un bouton posé par-dessus la page, et non une ligne de la liste : Facebook redessine sans arrêt ses listes, donc une ligne ajoutée dedans ne tenait pas.
@@ -72,6 +77,15 @@ Pour ouvrir directement Mode calme, lance :
 ```bash
 ./install.sh reglages
 ```
+
+
+## Crédits
+
+Aucun code n'a été copié. Ces projets ont servi d'inspiration :
+
+- [Nora](https://github.com/nonbili/Nora) : repérer les pubs par l'étiquette placée sous le nom de l'auteur, et masquer la barre « Ouvrir l'application ».
+- [FB-Mobile-Clean-my-feeds](https://github.com/webdevsk/FB-Mobile-Clean-my-feeds) : la liste des filtres (suggestions, pubs, Reels), et l'avertissement sur les sauts de scroll de Facebook mobile.
+- [calmgram](https://github.com/eloi-del/calmgram), l'appli Instagram du même principe, sert de base à celle-ci.
 
 ## Avertissement
 
